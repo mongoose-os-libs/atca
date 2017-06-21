@@ -14,6 +14,9 @@ config_schema:
     # By default designate slots 2 and 3 for ECDH.
   - ["sys.atca.ecdh_slots_mask", "i", 0x0c, {title: "Which slots can be used for ECDH (bitmask)"}]
 
+libs:
+  - origin: https://github.com/mongoose-os-libs/i2c
+
 tags:
   - atca
   - c

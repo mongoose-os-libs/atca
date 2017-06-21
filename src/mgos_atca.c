@@ -5,13 +5,14 @@
 
 #include "mgos_atca.h"
 
+#include "mgos_i2c.h"
+
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "common/cs_dbg.h"
 
-#include "fw/src/mgos_i2c.h"
 #include "fw/src/mgos_hal.h"
 #include "fw/src/mgos_hooks.h"
 #include "fw/src/mgos_sys_config.h"
