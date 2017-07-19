@@ -13,9 +13,9 @@
 
 #include "common/cs_dbg.h"
 
-#include "fw/src/mgos_hal.h"
-#include "fw/src/mgos_hooks.h"
-#include "fw/src/mgos_sys_config.h"
+#include "mgos_hal.h"
+#include "mgos_hooks.h"
+#include "mgos_sys_config.h"
 
 #include "cryptoauthlib.h"
 #include "hal/atca_hal.h"
