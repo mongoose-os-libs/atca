@@ -4,6 +4,8 @@ type: lib
 version: 1.0
 skeleton_version: 2017-06-16
 
+platforms: [ esp32, esp8266 ]
+
 sources:
   - src
 
