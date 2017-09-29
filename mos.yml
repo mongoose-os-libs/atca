@@ -8,6 +8,8 @@ platforms: [ esp32, esp8266 ]
 
 sources:
   - src
+includes:
+  - include
 
 config_schema:
   - ["sys.atca", "o", {title: "CryptoAuthLib configuration"}]
