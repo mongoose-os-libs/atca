@@ -177,7 +177,7 @@ bool mbedtls_atca_is_available() {
 }
 
 uint8_t mbedtls_atca_get_ecdh_slots_mask() {
-  return get_cfg()->sys.atca.ecdh_slots_mask;
+  return mgos_sys_config_get_sys_atca_ecdh_slots_mask();
 }
 
 bool mgos_atca_init(void) {
@@ -186,10 +186,9 @@ bool mgos_atca_init(void) {
       serial[(ATCA_SERIAL_NUM_SIZE + sizeof(uint32_t) - 1) / sizeof(uint32_t)];
   bool config_is_locked, data_is_locked;
   ATCA_STATUS status;
-  struct sys_config_sys_atca *acfg = &get_cfg()->sys.atca;
   const ATCAIfaceCfg *atca_cfg;
 
-  if (!acfg->enable) {
+  if (!mgos_sys_config_get_sys_atca_enable()) {
     return true;
   }
 
@@ -198,7 +197,7 @@ bool mgos_atca_init(void) {
     return false;
   }
 
-  uint8_t addr = acfg->i2c_addr;
+  uint8_t addr = mgos_sys_config_get_sys_atca_i2c_addr();
   /*
    * It's a bit unfortunate that Atmel requires address already shifted by 1.
    * If user specifies address > 0x80, it must be already shifted since I2C bus
