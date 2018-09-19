@@ -4,12 +4,15 @@ type: lib
 version: 1.0
 manifest_version: 2017-09-29
 
-platforms: [ esp32, esp8266 ]
-
 sources:
   - src
+  - cryptoauthlib/lib
+  - cryptoauthlib/lib/basic
+  - cryptoauthlib/lib/host
+
 includes:
   - include
+  - cryptoauthlib/lib
 
 config_schema:
   - ["sys.atca", "o", {title: "CryptoAuthLib configuration"}]
@@ -22,6 +25,11 @@ libs:
   - origin: https://github.com/mongoose-os-libs/i2c
 
 tags:
-  - security
   - c
+  - security
   - docs:drivers:ATCA
+
+manifest_version: 2018-06-20
+no_implicit_init_deps: true
+init_after:
+  - i2c
