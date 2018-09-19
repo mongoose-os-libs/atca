@@ -253,7 +253,8 @@ bool mgos_atca_init(void) {
   LOG(LL_INFO,
       ("ATECC508 @ 0x%02x: rev 0x%04x S/N 0x%04x%04x%02x, zone "
        "lock status: %s, %s; ECDH slots: 0x%02x",
-       addr >> 1, htonl(revision), htonl(serial[0]), htonl(serial[1]),
+       (unsigned int) (addr >> 1), (unsigned int) htonl(revision),
+       (unsigned int) htonl(serial[0]), (unsigned int) htonl(serial[1]),
        *((uint8_t *) &serial[2]), (config_is_locked ? "yes" : "no"),
        (data_is_locked ? "yes" : "no"), mbedtls_atca_get_ecdh_slots_mask()));
 

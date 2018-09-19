@@ -8,6 +8,8 @@ sources:
   - src
   - cryptoauthlib/lib
   - cryptoauthlib/lib/basic
+  - cryptoauthlib/lib/crypto
+  - cryptoauthlib/lib/hal
   - cryptoauthlib/lib/host
 
 includes:
