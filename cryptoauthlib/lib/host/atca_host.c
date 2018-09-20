@@ -1023,7 +1023,7 @@ ATCA_STATUS atcah_decrypt(struct atca_decrypt_in_out *param) {
  * \param[out] digest SHA256 of message
  */
 ATCA_STATUS atcah_sha256(int32_t len, const uint8_t *message, uint8_t *digest) {
-  return atcac_sw_sha2_256(message, len, digest);
+  return (ATCA_STATUS) atcac_sw_sha2_256(message, len, digest);
 }
 
 /** \brief Calculate the PubKey digest created by GenKey and saved to TempKey.
@@ -1198,7 +1198,7 @@ ATCA_STATUS atcah_sign_internal_msg(ATCADeviceType device_type,
     memcpy(&param->verify_other_data[14], &msg[50], 5);
   }
   if (param->digest)
-    return atcac_sw_sha2_256(msg, sizeof(msg), param->digest);
+    return (ATCA_STATUS) atcac_sw_sha2_256(msg, sizeof(msg), param->digest);
   else
     return ATCA_SUCCESS;
 }

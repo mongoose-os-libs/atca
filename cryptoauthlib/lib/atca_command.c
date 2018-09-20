@@ -53,7 +53,9 @@
  * \atmel_crypto_device_library_license_stop
  */
 
+#if defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wunused-parameter"
+#endif
 
 #include <stdlib.h>
 #include <string.h>
@@ -580,7 +582,6 @@ ATCA_STATUS atInitExecTimes(ATCACommand cacmd, ATCADeviceType device_type) {
       break;
     default:
       return ATCA_BAD_PARAM;
-      break;
   }
 
   return ATCA_SUCCESS;
@@ -672,10 +673,8 @@ bool atIsSHAFamily(ATCADeviceType deviceType) {
     case ATECC108A:
     case ATECC508A:
       return true;
-      break;
     default:
       return false;
-      break;
   }
 }
 
@@ -690,10 +689,8 @@ bool atIsECCFamily(ATCADeviceType deviceType) {
     case ATECC108A:
     case ATECC508A:
       return true;
-      break;
     default:
       return false;
-      break;
   }
 }
 
@@ -712,23 +709,17 @@ ATCA_STATUS isATCAError(uint8_t *data) {
     switch (data[1]) {
       case 0x01:  // checkmac or verify failed
         return ATCA_CHECKMAC_VERIFY_FAILED;
-        break;
       case 0x03:  // command received byte length, opcode or parameter was
                   // illegal
         return ATCA_BAD_OPCODE;
-        break;
       case 0x0f:  // chip can't execute the command
         return ATCA_EXECUTION_ERROR;
-        break;
       case 0x11:  // chip was successfully woken up
         return ATCA_WAKE_SUCCESS;
-        break;
       case 0xff:  // bad crc found or other comm error
         return ATCA_STATUS_CRC;
-        break;
       default:
         return ATCA_GEN_FAIL;
-        break;
     }
   } else
     return ATCA_SUCCESS;

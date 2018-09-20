@@ -54,7 +54,9 @@
  * \atmel_crypto_device_library_license_stop
  */
 
+#if defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wunused-parameter"
+#endif
 
 #include "atca_basic.h"
 #include "host/atca_host.h"
@@ -690,7 +692,7 @@ ATCA_STATUS atcab_nonce_base(uint8_t mode, const uint8_t *num_in,
  *  \return ATCA_STATUS
  */
 ATCA_STATUS atcab_read_serial_number(uint8_t *serial_number) {
-  uint8_t status = ATCA_GEN_FAIL;
+  ATCA_STATUS status = ATCA_GEN_FAIL;
   uint8_t read_buf[ATCA_BLOCK_SIZE];
 
   if (!serial_number) return ATCA_BAD_PARAM;
@@ -1152,7 +1154,7 @@ ATCA_STATUS atcab_get_zone_size(uint8_t zone, uint16_t slot, size_t *size) {
  *  \return ATCA_STATUS
  */
 ATCA_STATUS atcab_is_slot_locked(uint8_t slot, bool *islocked) {
-  uint8_t ret = ATCA_GEN_FAIL;
+  ATCA_STATUS ret = ATCA_GEN_FAIL;
   uint8_t slotLock_data[ATCA_WORD_SIZE];
   uint8_t lockable_data[ATCA_WORD_SIZE];
   uint8_t slotLock_idx = 0;
@@ -1209,7 +1211,7 @@ ATCA_STATUS atcab_is_slot_locked(uint8_t slot, bool *islocked) {
  *  \return ATCA_STATUS
  */
 ATCA_STATUS atcab_is_locked(uint8_t zone, bool *islocked) {
-  uint8_t ret = ATCA_GEN_FAIL;
+  ATCA_STATUS ret = ATCA_GEN_FAIL;
   uint8_t word_data[ATCA_WORD_SIZE];
   uint8_t zone_idx = 2;
 
@@ -2367,7 +2369,7 @@ ATCA_STATUS atcab_gendig(uint8_t zone, uint16_t key_id,
  *  \return ATCA_STATUS
  */
 ATCA_STATUS atcab_read_sig(uint8_t slot8toF, uint8_t *sig) {
-  uint8_t ret = ATCA_GEN_FAIL;
+  ATCA_STATUS ret = ATCA_GEN_FAIL;
   uint8_t read_buf[ATCA_BLOCK_SIZE];
   uint8_t block = 0;
   uint8_t offset = 0;
@@ -2623,7 +2625,7 @@ ATCA_STATUS atcab_write_pubkey(uint16_t slot8toF, const uint8_t *pubkey) {
  *  \return ATCA_STATUS
  */
 ATCA_STATUS atcab_read_pubkey(uint16_t slot8toF, uint8_t *pubkey) {
-  uint8_t ret = ATCA_GEN_FAIL;
+  ATCA_STATUS ret = ATCA_GEN_FAIL;
   uint8_t read_buf[ATCA_BLOCK_SIZE];
   uint8_t block = 0;
   uint8_t offset = 0;
