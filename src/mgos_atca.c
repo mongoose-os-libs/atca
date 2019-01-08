@@ -161,7 +161,8 @@ ATCA_STATUS mgos_atca_hal_i2c_release(void *hal_data) {
 
 ATCA_STATUS hal_iface_init(const ATCAIfaceCfg *cfg, ATCAHAL_t *hal) {
   if (cfg->iface_type != ATCA_I2C_IFACE) return ATCA_BAD_PARAM;
-  struct mgos_i2c *i2c = mgos_i2c_get_global();
+  struct mgos_i2c *i2c =
+      mgos_i2c_get_bus(mgos_sys_config_get_sys_atca_i2c_bus());
   if (i2c == NULL) return ATCA_GEN_FAIL;
   hal->halinit = &mgos_atca_hal_i2c_init;
   hal->halpostinit = &mgos_atca_hal_i2c_post_init;
@@ -205,7 +206,7 @@ bool mgos_atca_init(void) {
     return true;
   }
 
-  if (mgos_i2c_get_global() == NULL) {
+  if (mgos_i2c_get_bus(mgos_sys_config_get_sys_atca_i2c_bus()) == NULL) {
     LOG(LL_ERROR, ("ATCA requires I2C to be enabled (i2c.enable=true)"));
     return false;
   }
