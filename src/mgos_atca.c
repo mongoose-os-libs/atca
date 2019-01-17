@@ -236,7 +236,9 @@ bool mgos_atca_init(void) {
 
   status = atcab_info((uint8_t *) &revision);
   if (status != ATCA_SUCCESS) {
-    LOG(LL_ERROR, ("ATCA: Failed to get chip info"));
+    LOG(LL_ERROR, ("ATCA: Failed to get chip info (%d/0x%x)",
+                   mgos_sys_config_get_sys_atca_i2c_bus(),
+                   (atca_cfg->atcai2c.slave_address >> 1)));
     goto out;
   }
 
@@ -254,12 +256,14 @@ bool mgos_atca_init(void) {
   }
 
   LOG(LL_INFO,
-      ("ATECC508 @ 0x%02x: rev 0x%04x S/N 0x%04x%04x%02x, zone "
+      ("%s @ %d/0x%02x: rev 0x%04x S/N 0x%04x%04x%02x, zone "
        "lock status: %s, %s; ECDH slots: 0x%02x",
-       (unsigned int) (addr >> 1), (unsigned int) htonl(revision),
-       (unsigned int) htonl(serial[0]), (unsigned int) htonl(serial[1]),
-       *((uint8_t *) &serial[2]), (config_is_locked ? "yes" : "no"),
-       (data_is_locked ? "yes" : "no"), mbedtls_atca_get_ecdh_slots_mask()));
+       (htonl(revision) < 0x6000 ? "ATECC508" : "ATECC608"),
+       mgos_sys_config_get_sys_atca_i2c_bus(), (unsigned int) (addr >> 1),
+       (unsigned int) htonl(revision), (unsigned int) htonl(serial[0]),
+       (unsigned int) htonl(serial[1]), *((uint8_t *) &serial[2]),
+       (config_is_locked ? "yes" : "no"), (data_is_locked ? "yes" : "no"),
+       mbedtls_atca_get_ecdh_slots_mask()));
 
   s_atca_is_available = true;
 
