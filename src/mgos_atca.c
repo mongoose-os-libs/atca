@@ -258,7 +258,7 @@ bool mgos_atca_init(void) {
   LOG(LL_INFO,
       ("%s @ %d/0x%02x: rev 0x%04x S/N 0x%04x%04x%02x, zone "
        "lock status: %s, %s; ECDH slots: 0x%02x",
-       (htonl(revision) < 0x6000 ? "ATECC508" : "ATECC608"),
+       (htonl(revision) < 0x6000 ? "ATECC508A" : "ATECC608A"),
        mgos_sys_config_get_sys_atca_i2c_bus(), (unsigned int) (addr >> 1),
        (unsigned int) htonl(revision), (unsigned int) htonl(serial[0]),
        (unsigned int) htonl(serial[1]), *((uint8_t *) &serial[2]),
