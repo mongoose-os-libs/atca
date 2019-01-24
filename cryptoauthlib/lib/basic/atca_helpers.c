@@ -252,7 +252,7 @@ ATCA_STATUS packHex(const char *asciiHex, int asciiHexLen, char *packedHex,
 */
 ATCA_STATUS atcab_printbin_label(const uint8_t *label, uint8_t *binary,
                                  int binLen) {
-  printf((const char *) label);
+  printf("%s", (const char *) label);
   return atcab_printbin(binary, binLen, true);
 }
 
