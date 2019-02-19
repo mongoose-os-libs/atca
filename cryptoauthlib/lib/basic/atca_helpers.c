@@ -278,7 +278,7 @@ ATCA_STATUS atcab_printbin(uint8_t *binary, int binLen, bool addspace) {
   int lineLen = 16;
 
   // Verify the inputs
-  if ((binary == NULL)) return ATCA_BAD_PARAM;
+  if (binary == NULL) return ATCA_BAD_PARAM;
 
   // Set the line length
   lineLen = addspace ? 16 : 32;
