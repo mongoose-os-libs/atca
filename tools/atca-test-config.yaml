@@ -8,10 +8,12 @@
 # To apply this config use the following command:
 #   mos atca-set-config --port /dev/ttyUSB0 atca-test-config.yaml --dry-run=false
 
-reserved13: 192
+reserved13: 1
+revision: 24578
 i2cenable: true
 reserved15: 0
-i2caddress: 192
+i2caddress: 192  # Note: this value is the address byte, bus address is the upper 7 bits.
+                 # Thus actual bus address is 96 (0x60).
 reserved17: 0
 otpmode: 85
 chipmode:
@@ -349,8 +351,8 @@ lastkeyuse0: 18446744073709551615
 lastkeyuse1: 18446744073709551615
 userextra: 0
 selector: 0
-lockvalue: Locked
-lockconfig: Locked
+lockvalue: Unlocked
+lockconfig: Unlocked
 slotlocked: 65535
 reserved90: 0
 reserved91: 0
