@@ -8,13 +8,13 @@ sources:
   - src
   - cryptoauthlib/lib
   - cryptoauthlib/lib/basic
-  - cryptoauthlib/lib/crypto
-  - cryptoauthlib/lib/hal
   - cryptoauthlib/lib/host
 
 includes:
   - include
   - cryptoauthlib/lib
+  - cryptoauthlib/lib/crypto
+  - cryptoauthlib/lib/hal
 
 config_schema:
   - ["sys.atca", "o", {title: "CryptoAuthLib configuration"}]
@@ -31,6 +31,9 @@ tags:
   - c
   - security
   - docs:drivers:ATCA
+
+cdefs:
+  ATCA_HAL_I2C: 1
 
 manifest_version: 2018-06-20
 no_implicit_init_deps: true

@@ -42,7 +42,7 @@
  * Currently only I2C is implemented.
  */
 
-static ATCA_STATUS mgos_atca_hal_i2c_init(void *hal, const ATCAIfaceCfg *cfg) {
+static ATCA_STATUS mgos_atca_hal_i2c_init(void *hal, ATCAIfaceCfg *cfg) {
   (void) hal;
   (void) cfg;
   return ATCA_SUCCESS;
@@ -161,7 +161,7 @@ ATCA_STATUS mgos_atca_hal_i2c_release(void *hal_data) {
   return ATCA_SUCCESS;
 }
 
-ATCA_STATUS hal_iface_init(const ATCAIfaceCfg *cfg, ATCAHAL_t *hal) {
+ATCA_STATUS hal_iface_init(ATCAIfaceCfg *cfg, ATCAHAL_t *hal) {
   if (cfg->iface_type != ATCA_I2C_IFACE) return ATCA_BAD_PARAM;
   struct mgos_i2c *i2c =
       mgos_i2c_get_bus(mgos_sys_config_get_sys_atca_i2c_bus());
@@ -202,7 +202,7 @@ bool mgos_atca_init(void) {
       serial[(ATCA_SERIAL_NUM_SIZE + sizeof(uint32_t) - 1) / sizeof(uint32_t)];
   bool config_is_locked, data_is_locked;
   ATCA_STATUS status;
-  const ATCAIfaceCfg *atca_cfg;
+  ATCAIfaceCfg *atca_cfg;
 
   if (!mgos_sys_config_get_sys_atca_enable()) {
     return true;

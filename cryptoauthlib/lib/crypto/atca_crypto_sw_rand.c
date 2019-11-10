@@ -35,5 +35,7 @@
 
 int atcac_sw_random(uint8_t* data, size_t data_size)
 {
+    (void) data;
+    (void) data_size;
     return ATCA_UNIMPLEMENTED;
 }

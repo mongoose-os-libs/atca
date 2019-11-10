@@ -48,6 +48,7 @@ ATCA_STATUS atCheckMAC(ATCACommand ca_cmd, ATCAPacket *packet)
     packet->opcode = ATCA_CHECKMAC;
     packet->txsize = CHECKMAC_COUNT;
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -62,6 +63,7 @@ ATCA_STATUS atCounter(ATCACommand ca_cmd, ATCAPacket *packet)
     packet->opcode = ATCA_COUNTER;
     packet->txsize = COUNTER_COUNT;
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -87,6 +89,7 @@ ATCA_STATUS atDeriveKey(ATCACommand ca_cmd, ATCAPacket *packet, bool has_mac)
         packet->txsize = DERIVE_KEY_COUNT_SMALL;
     }
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -101,6 +104,7 @@ ATCA_STATUS atECDH(ATCACommand ca_cmd, ATCAPacket *packet)
     packet->opcode = ATCA_ECDH;
     packet->txsize = ECDH_COUNT;
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -128,6 +132,7 @@ ATCA_STATUS atGenDig(ATCACommand ca_cmd, ATCAPacket *packet, bool is_no_mac_key)
         packet->txsize = GENDIG_COUNT;
     }
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -150,6 +155,7 @@ ATCA_STATUS atGenKey(ATCACommand ca_cmd, ATCAPacket *packet)
         packet->txsize = GENKEY_COUNT;
     }
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -164,6 +170,7 @@ ATCA_STATUS atHMAC(ATCACommand ca_cmd, ATCAPacket *packet)
     packet->opcode = ATCA_HMAC;
     packet->txsize = HMAC_COUNT;
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -178,6 +185,7 @@ ATCA_STATUS atInfo(ATCACommand ca_cmd, ATCAPacket *packet)
     packet->opcode = ATCA_INFO;
     packet->txsize = INFO_COUNT;
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -192,6 +200,7 @@ ATCA_STATUS atLock(ATCACommand ca_cmd, ATCAPacket *packet)
     packet->opcode = ATCA_LOCK;
     packet->txsize = LOCK_COUNT;
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -214,6 +223,7 @@ ATCA_STATUS atMAC(ATCACommand ca_cmd, ATCAPacket *packet)
         packet->txsize = MAC_COUNT_SHORT;
     }
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -254,6 +264,7 @@ ATCA_STATUS atNonce(ATCACommand ca_cmd, ATCAPacket *packet)
         return ATCA_BAD_PARAM;
     }
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -268,6 +279,7 @@ ATCA_STATUS atPause(ATCACommand ca_cmd, ATCAPacket *packet)
     packet->opcode = ATCA_PAUSE;
     packet->txsize = PAUSE_COUNT;
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -282,6 +294,7 @@ ATCA_STATUS atPrivWrite(ATCACommand ca_cmd, ATCAPacket *packet)
     packet->opcode = ATCA_PRIVWRITE;
     packet->txsize = PRIVWRITE_COUNT;
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -296,6 +309,7 @@ ATCA_STATUS atRandom(ATCACommand ca_cmd, ATCAPacket *packet)
     packet->opcode = ATCA_RANDOM;
     packet->txsize = RANDOM_COUNT;
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -310,6 +324,7 @@ ATCA_STATUS atRead(ATCACommand ca_cmd, ATCAPacket *packet)
     packet->opcode = ATCA_READ;
     packet->txsize = READ_COUNT;
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -337,9 +352,9 @@ ATCA_STATUS atSecureBoot(ATCACommand ca_cmd, ATCAPacket *packet)
 
     default:
         return ATCA_BAD_PARAM;
-        break;
     }
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -385,6 +400,7 @@ ATCA_STATUS atSHA(ATCACommand ca_cmd, ATCAPacket *packet, uint16_t write_context
         return ATCA_BAD_PARAM;
     }
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -399,6 +415,7 @@ ATCA_STATUS atSign(ATCACommand ca_cmd, ATCAPacket *packet)
     packet->opcode = ATCA_SIGN;
     packet->txsize = SIGN_COUNT;
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -413,6 +430,7 @@ ATCA_STATUS atUpdateExtra(ATCACommand ca_cmd, ATCAPacket *packet)
     packet->opcode = ATCA_UPDATE_EXTRA;
     packet->txsize = UPDATE_COUNT;
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -451,6 +469,7 @@ ATCA_STATUS atVerify(ATCACommand ca_cmd, ATCAPacket *packet)
     }
 
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -479,6 +498,7 @@ ATCA_STATUS atWrite(ATCACommand ca_cmd, ATCAPacket *packet, bool has_mac)
         packet->txsize += WRITE_MAC_SIZE;
     }
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -502,6 +522,7 @@ ATCA_STATUS atAES(ATCACommand ca_cmd, ATCAPacket *packet)
         packet->txsize += AES_DATA_SIZE;
     }
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -516,6 +537,7 @@ ATCA_STATUS atSelfTest(ATCACommand ca_cmd, ATCAPacket *packet)
     packet->opcode = ATCA_SELFTEST;
     packet->txsize = ATCA_CMD_SIZE_MIN;
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -544,6 +566,7 @@ ATCA_STATUS atKDF(ATCACommand ca_cmd, ATCAPacket *packet)
         packet->txsize = ATCA_CMD_SIZE_MIN + KDF_DETAILS_SIZE + packet->data[3];
     }
     atCalcCrc(packet);
+    (void) ca_cmd;
     return ATCA_SUCCESS;
 }
 
@@ -690,11 +713,9 @@ bool atIsSHAFamily(ATCADeviceType device_type)
     case ATECC508A:
     case ATECC608A:
         return true;
-        break;
 
     default:
         return false;
-        break;
     }
 }
 
@@ -710,10 +731,8 @@ bool atIsECCFamily(ATCADeviceType device_type)
     case ATECC508A:
     case ATECC608A:
         return true;
-        break;
     default:
         return false;
-        break;
     }
 }
 
@@ -732,30 +751,22 @@ ATCA_STATUS isATCAError(uint8_t *data)
             return ATCA_SUCCESS;
         case 0x01: // checkmac or verify failed
             return ATCA_CHECKMAC_VERIFY_FAILED;
-            break;
         case 0x03: // command received byte length, opcode or parameter was illegal
             return ATCA_PARSE_ERROR;
-            break;
         case 0x05: // computation error during ECC processing causing invalid results
             return ATCA_STATUS_ECC;
-            break;
         case 0x07: // chip is in self test failure mode
             return ATCA_STATUS_SELFTEST_ERROR;
-            break;
         case 0x08: //random number generator health test error
             return ATCA_HEALTH_TEST_ERROR;
         case 0x0f: // chip can't execute the command
             return ATCA_EXECUTION_ERROR;
-            break;
         case 0x11: // chip was successfully woken up
             return ATCA_WAKE_SUCCESS;
-            break;
         case 0xff: // bad crc found (command not properly received by device) or other comm error
             return ATCA_STATUS_CRC;
-            break;
         default:
             return ATCA_GEN_FAIL;
-            break;
         }
     }
     else

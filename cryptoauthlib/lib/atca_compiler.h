@@ -107,6 +107,18 @@
 #elif defined(__SUNPRO_C) || defined(__SUNPRO_CC)
 /* Oracle Solaris Studio. ----------------------------------- */
 
+#elif defined(__TI_COMPILER_VERSION__)
+
+#define ATCA_UINT16_HOST_TO_LE(x)  (x)
+#define ATCA_UINT16_LE_TO_HOST(x)  (x)
+#define ATCA_UINT32_HOST_TO_LE(x)  (x)
+#define __flip16(x) ((((x) & 0xff00) >> 8) | (((x) & 0x00ff) << 8))
+#define __flip32(x) ((__flip16(x) << 16) | (__flip16((x) >> 16)))
+#define ATCA_UINT32_HOST_TO_BE(x)  __flip32(x)
+#define ATCA_UINT32_BE_TO_HOST(x)  __flip32(x)
+#define ATCA_UINT64_HOST_TO_BE(x)  ((__flip32(x) << 32) | (__flip32((x) >> 32)))
+#define ATCA_UINT64_BE_TO_HOST(x)  ((__flip32(x) << 32) | (__flip32((x) >> 32)))
+
 #endif
 
 #endif /* ATCA_COMPILER_H_ */

@@ -88,7 +88,7 @@ static void hex_to_lowercase(char *buffer, size_t length)
     {
         for (index = 0; index < length; index++)
         {
-            buffer[index] = tolower(buffer[index]);
+            buffer[index] = tolower((int) buffer[index]);
         }
     }
 }
@@ -102,7 +102,7 @@ static void hex_to_uppercase(char *buffer, size_t length)
     {
         for (index = 0; index < length; index++)
         {
-            buffer[index] = toupper(buffer[index]);
+            buffer[index] = toupper((int) buffer[index]);
         }
     }
 }
@@ -548,7 +548,7 @@ uint8_t base64Index(char c, const uint8_t * rules)
  */
 char base64Char(uint8_t id, const uint8_t * rules)
 {
-    if (id >= 0 && (id < 26))
+    if (id < 26)
     {
         return (char)('A' + id);
     }
