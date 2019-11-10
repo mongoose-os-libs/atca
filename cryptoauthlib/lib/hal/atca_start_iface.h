@@ -1,4 +1,3 @@
-/* clang-format off */
 /*
    this is a placeholder include used to satisfy the include
 

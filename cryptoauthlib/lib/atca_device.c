@@ -1,43 +1,28 @@
-/* clang-format off */
 /**
  * \file
- * \brief  Atmel CryptoAuth device object
+ * \brief  Microchip CryptoAuth device object
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
- *
- * \atmel_crypto_device_library_license_start
+ * \copyright (c) 2015-2018 Microchip Technology Inc. and its subsidiaries.
  *
  * \page License
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * Subject to your compliance with these terms, you may use Microchip software
+ * and any derivatives exclusively with Microchip products. It is your
+ * responsibility to comply with third party license terms applicable to your
+ * use of third party software (including open source software) that may
+ * accompany Microchip software.
  *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel integrated circuit.
- *
- * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \atmel_crypto_device_library_license_stop
+ * THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+ * EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+ * WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+ * PARTICULAR PURPOSE. IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT,
+ * SPECIAL, PUNITIVE, INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE
+ * OF ANY KIND WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF
+ * MICROCHIP HAS BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE
+ * FORESEEABLE. TO THE FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL
+ * LIABILITY ON ALL CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED
+ * THE AMOUNT OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR
+ * THIS SOFTWARE.
  */
 
 #include <stdlib.h>
@@ -47,72 +32,143 @@
  * \brief ATCADevice object - composite of command and interface objects
    @{ */
 
-/** \brief atca_device is the C object backing ATCADevice.  See the
- * atca_device.h file for
- * details on the ATCADevice methods
+
+#ifndef ATCA_NO_HEAP
+/** \brief constructor for a Microchip CryptoAuth device
+ * \param[in] cfg  Interface configuration object
+ * \return Reference to a new ATCADevice on success. NULL on failure.
  */
+ATCADevice newATCADevice(ATCAIfaceCfg *cfg)
+{
+    ATCADevice ca_dev = NULL;
+    ATCA_STATUS status;
 
-struct atca_device {
-  ATCACommand
-      mCommands;     // has-a command set to support a given CryptoAuth device
-  ATCAIface mIface;  // has-a physical interface
-};
+    if (cfg == NULL)
+    {
+        return NULL;
+    }
 
-/** \brief constructor for an Atmel CryptoAuth device
- * \param[in] cfg  pointer to an interface configuration object
- * \return reference to a new ATCADevice
+    ca_dev = (ATCADevice)malloc(sizeof(*ca_dev));
+    if (ca_dev == NULL)
+    {
+        return NULL;
+    }
+
+    ca_dev->mCommands = (ATCACommand)malloc(sizeof(*(ca_dev->mCommands)));
+    if (ca_dev->mCommands == NULL)
+    {
+        free(ca_dev);
+        ca_dev = NULL;
+        return NULL;
+    }
+
+    ca_dev->mIface = (ATCAIface)malloc(sizeof(*(ca_dev->mIface)));
+    if (ca_dev->mIface == NULL)
+    {
+        free(ca_dev->mCommands);
+        free(ca_dev);
+        ca_dev = NULL;
+        return NULL;
+    }
+
+    status = initATCADevice(cfg, ca_dev);
+    if (status != ATCA_SUCCESS)
+    {
+        free(ca_dev->mIface);
+        free(ca_dev->mCommands);
+        free(ca_dev);
+        ca_dev = NULL;
+        return NULL;
+    }
+
+    return ca_dev;
+}
+
+/** \brief destructor for a device NULLs reference after object is freed
+ * \param[in] ca_dev  pointer to a reference to a device
  */
+void deleteATCADevice(ATCADevice *ca_dev)
+{
+    if (ca_dev == NULL)
+    {
+        return;
+    }
 
-ATCADevice newATCADevice(const ATCAIfaceCfg *cfg) {
-  ATCADevice cadev = NULL;
+    releaseATCADevice(*ca_dev);
+    deleteATCACommand(&(*ca_dev)->mCommands);
+    // Free iface manually as we don't want to call releaseATCAIface twice
+    if ((*ca_dev)->mIface)
+    {
+        free((*ca_dev)->mIface);
+        (*ca_dev)->mIface = NULL;
+    }
 
-  if (cfg == NULL) return NULL;
+    free(*ca_dev);
+    *ca_dev = NULL;
+}
+#endif
 
-  cadev = (ATCADevice) malloc(sizeof(struct atca_device));
-  cadev->mCommands = (ATCACommand) newATCACommand(cfg->devtype);
-  cadev->mIface = (ATCAIface) newATCAIface(cfg);
+/** \brief Initializer for an Microchip CryptoAuth device
+ * \param[in]    cfg     pointer to an interface configuration object
+ * \param[inout] ca_dev  As input, pre-allocated structure to be initialized.
+ *                       mCommands and mIface members should point to existing
+ *                       structures to be initialized.
+ * \return ATCA_SUCCESS on success, otherwise an error code.
+ */
+ATCA_STATUS initATCADevice(ATCAIfaceCfg *cfg, ATCADevice ca_dev)
+{
+    ATCA_STATUS status;
 
-  if (cadev->mCommands == NULL || cadev->mIface == NULL) {
-    free(cadev);
-    cadev = NULL;
-  }
+    if (cfg == NULL || ca_dev == NULL || ca_dev->mCommands == NULL || ca_dev->mIface == NULL)
+    {
+        return ATCA_BAD_PARAM;
+    }
 
-  return cadev;
+    status = initATCACommand(cfg->devtype, ca_dev->mCommands);
+    if (status != ATCA_SUCCESS)
+    {
+        return status;
+    }
+
+    status = initATCAIface(cfg, ca_dev->mIface);
+    if (status != ATCA_SUCCESS)
+    {
+        return status;
+    }
+
+    return ATCA_SUCCESS;
 }
 
 /** \brief returns a reference to the ATCACommand object for the device
  * \param[in] dev  reference to a device
  * \return reference to the ATCACommand object for the device
  */
-ATCACommand atGetCommands(ATCADevice dev) {
-  return dev->mCommands;
+ATCACommand atGetCommands(ATCADevice dev)
+{
+    return dev->mCommands;
 }
 
 /** \brief returns a reference to the ATCAIface interface object for the device
  * \param[in] dev  reference to a device
  * \return reference to the ATCAIface object for the device
  */
-
-ATCAIface atGetIFace(ATCADevice dev) {
-  return dev->mIface;
+ATCAIface atGetIFace(ATCADevice dev)
+{
+    return dev->mIface;
 }
 
-/** \brief destructor for a device NULLs reference after object is freed
- * \param[in] cadev  pointer to a reference to a device
- *
+/** \brief Release any resources associated with the device.
+ *  \param[in] ca_dev  Device to release
+ *  \return ATCA_SUCCESS on success, otherwise an error code.
  */
-
-void deleteATCADevice(ATCADevice *cadev)  // destructor
+ATCA_STATUS releaseATCADevice(ATCADevice ca_dev)
 {
-  struct atca_device *dev = *cadev;
+    if (ca_dev == NULL)
+    {
+        return ATCA_BAD_PARAM;
+    }
 
-  if (*cadev) {
-    deleteATCACommand((ATCACommand *) &(dev->mCommands));
-    deleteATCAIface((ATCAIface *) &(dev->mIface));
-    free((void *) *cadev);
-  }
-
-  *cadev = NULL;
+    return releaseATCAIface(ca_dev->mIface);
 }
 
 /** @} */
