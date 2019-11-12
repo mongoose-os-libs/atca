@@ -1,14 +1,17 @@
-# This is an example ATECC508A/608A configuration file that can be used for testing.
-# Note: For 608A configuration with AES slots see
-#   https://github.com/mongoose-os-libs/atca/blob/master/tools/atca-test-config-608a.yaml
+# This is an example ATECC608A configuration file that can be used for testing.
 #
 # Slots 0-3 are ECC slots with ECDH enabled. They can be generated on the device
 # or rewritten using key in slot 4, which itself can be reset at any time.
 #
+# Slots 5 and 15 are for AES keys, slot 5 is 36 bytes and can hold 2,
+# slot 15 is 72 bytes and can hold 4 keys.
+# Slot 5 can be read and written without encryption, reads/writes to slot 15
+# are protected by the key in slot 4.
+#
 # NB: This setup is NOT secure and is only meant for development.
 #
 # To apply this config use the following command:
-#   mos atca-set-config --port /dev/ttyUSB0 atca-test-config.yaml --dry-run=false
+#   mos atca-set-config --port /dev/ttyUSB0 atca-test-config-608a.yaml --dry-run=false
 
 reserved13: 1
 revision: 24578
@@ -117,17 +120,17 @@ slotinfo:
     x509id: 0
 - num: 4
   slotconfig:
-    readkey: 15
+    readkey: 0
     nomac: false
     limiteduse: false
     encryptread: false
     issecret: true
-    writekey: 15
+    writekey: 0
     writeconfig: 0
   keyconfig:
     private: false
     pubinfo: false
-    keytype: NonECC
+    keytype: Other
     lockable: true
     reqrandom: false
     reqauth: false
@@ -136,18 +139,18 @@ slotinfo:
     x509id: 0
 - num: 5
   slotconfig:
-    readkey: 15
+    readkey: 4
     nomac: false
     limiteduse: false
-    encryptread: false
+    encryptread: true
     issecret: true
-    writekey: 15
-    writeconfig: 8
+    writekey: 4
+    writeconfig: 4
   keyconfig:
     private: false
     pubinfo: false
-    keytype: NonECC
-    lockable: false
+    keytype: AES
+    lockable: true
     reqrandom: false
     reqauth: false
     authkey: 0
@@ -165,7 +168,7 @@ slotinfo:
   keyconfig:
     private: false
     pubinfo: false
-    keytype: NonECC
+    keytype: Other
     lockable: false
     reqrandom: false
     reqauth: false
@@ -207,7 +210,7 @@ slotinfo:
   keyconfig:
     private: false
     pubinfo: false
-    keytype: NonECC
+    keytype: Other
     lockable: false
     reqrandom: false
     reqauth: false
@@ -226,7 +229,7 @@ slotinfo:
   keyconfig:
     private: false
     pubinfo: false
-    keytype: NonECC
+    keytype: Other
     lockable: false
     reqrandom: false
     reqauth: false
@@ -245,7 +248,7 @@ slotinfo:
   keyconfig:
     private: false
     pubinfo: false
-    keytype: NonECC
+    keytype: Other
     lockable: true
     reqrandom: false
     reqauth: false
@@ -264,7 +267,7 @@ slotinfo:
   keyconfig:
     private: false
     pubinfo: false
-    keytype: NonECC
+    keytype: Other
     lockable: true
     reqrandom: false
     reqauth: false
@@ -283,7 +286,7 @@ slotinfo:
   keyconfig:
     private: false
     pubinfo: false
-    keytype: NonECC
+    keytype: Other
     lockable: true
     reqrandom: false
     reqauth: false
@@ -302,7 +305,7 @@ slotinfo:
   keyconfig:
     private: false
     pubinfo: false
-    keytype: NonECC
+    keytype: Other
     lockable: true
     reqrandom: false
     reqauth: false
@@ -321,7 +324,7 @@ slotinfo:
     encryptread: false
     issecret: true
     writekey: 15
-    writeconfig: 4
+    writeconfig: 6
   keyconfig:
     private: true
     pubinfo: true
@@ -339,12 +342,12 @@ slotinfo:
     limiteduse: false
     encryptread: false
     issecret: false
-    writekey: 15
+    writekey: 0
     writeconfig: 0
   keyconfig:
     private: false
     pubinfo: false
-    keytype: NonECC
+    keytype: AES
     lockable: true
     reqrandom: false
     reqauth: false
