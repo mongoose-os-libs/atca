@@ -27,7 +27,9 @@ extern "C" {
 #endif /* __cplusplus */
 
 /* Invoked from mbedTLS during ECDH phase of the handshake. */
-bool mbedtls_atca_is_available();
+int mbedtls_atca_is_available(void);
+
+int mbedtls_atca_is_608(void);
 
 #ifdef __cplusplus
 }
