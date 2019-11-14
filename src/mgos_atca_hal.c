@@ -180,3 +180,17 @@ ATCA_STATUS hal_iface_release(ATCAIfaceType ifacetype, void *hal_data) {
   (void) hal_data;
   return ATCA_SUCCESS;
 }
+
+int atcac_sw_sha2_256(const uint8_t *data, size_t data_size,
+                      uint8_t digest[32]) {
+  mbedtls_sha256(data, data_size, digest, false /* is_224 */);
+  return 0;
+}
+
+void atca_delay_ms(uint32_t delay) {
+  mgos_msleep(delay);
+}
+
+void atca_delay_us(uint32_t delay) {
+  mgos_usleep(delay);
+}

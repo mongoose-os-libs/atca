@@ -127,11 +127,3 @@ out:
   }
   return true;
 }
-
-void atca_delay_ms(uint32_t delay) {
-  mgos_usleep(delay * 1000);
-}
-
-void atca_delay_us(uint32_t delay) {
-  mgos_usleep(delay);
-}
