@@ -181,10 +181,20 @@ ATCA_STATUS hal_iface_release(ATCAIfaceType ifacetype, void *hal_data) {
   return ATCA_SUCCESS;
 }
 
-int atcac_sw_sha2_256(const uint8_t *data, size_t data_size,
-                      uint8_t digest[32]) {
-  mbedtls_sha256(data, data_size, digest, false /* is_224 */);
-  return 0;
+ATCA_STATUS hal_i2c_discover_buses(int i2c_buses[], int max_buses) {
+  for (int i = 0; i < max_buses; i++) {
+    i2c_buses[i] = (mgos_i2c_get_bus(i) != NULL ? i : -1);
+  }
+  return ATCA_SUCCESS;
+}
+
+ATCA_STATUS hal_i2c_discover_devices(int bus_num, ATCAIfaceCfg *cfg,
+                                     int *found) {
+  *found = 0;
+  if (bus_num < 0) return ATCA_BAD_PARAM;
+  // TODO
+  (void) cfg;
+  return ATCA_SUCCESS;
 }
 
 void atca_delay_ms(uint32_t delay) {

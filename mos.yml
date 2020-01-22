@@ -9,6 +9,7 @@ sources:
   - cryptoauthlib/lib
   - cryptoauthlib/lib/basic
   - cryptoauthlib/lib/host
+  - cryptoauthlib/lib/mbedtls/atca_mbedtls_wrap.c
 
 includes:
   - include

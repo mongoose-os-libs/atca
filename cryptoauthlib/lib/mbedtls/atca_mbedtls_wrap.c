@@ -44,14 +44,14 @@
 
 #include "mbedtls/pk.h"
 #include "mbedtls/ecp.h"
+#include "mbedtls/sha1.h"
+#include "mbedtls/sha256.h"
 #include "mbedtls/x509_crt.h"
 
 /* Cryptoauthlib Includes */
 #include "cryptoauthlib.h"
 #include "atcacert/atcacert_client.h"
 #include "atcacert/atcacert_def.h"
-
-#if 0
 
 #include "crypto/atca_crypto_sw_sha1.h"
 #include "crypto/atca_crypto_sw_sha2.h"
@@ -60,29 +60,33 @@
 
 int atcac_sw_sha1(const uint8_t * data, size_t data_size, uint8_t digest[ATCA_SHA1_DIGEST_SIZE])
 {
-
+    return mbedtls_sha1_ret(data, data_size, digest);
 }
 
 int atcac_sw_sha2_256_init(atcac_sha2_256_ctx* ctx)
 {
-
+    mbedtls_sha256_init((mbedtls_sha256_context *) ctx);
+    return mbedtls_sha256_starts_ret((mbedtls_sha256_context *) ctx, 0 /* is224 */);
 }
 
 int atcac_sw_sha2_256_update(atcac_sha2_256_ctx* ctx, const uint8_t* data, size_t data_size)
 {
-
+    return mbedtls_sha256_update_ret((mbedtls_sha256_context *) ctx, data, data_size);
 }
 
 int atcac_sw_sha2_256_finish(atcac_sha2_256_ctx * ctx, uint8_t digest[ATCA_SHA2_256_DIGEST_SIZE])
 {
-
+    int ret = mbedtls_sha256_finish_ret((mbedtls_sha256_context *) ctx, digest);
+    mbedtls_sha256_free((mbedtls_sha256_context *) ctx);
+    return ret;
 }
 
 int atcac_sw_sha2_256(const uint8_t * data, size_t data_size, uint8_t digest[ATCA_SHA2_256_DIGEST_SIZE])
 {
-
+    return mbedtls_sha256_ret(data, data_size, digest, 0 /* is224 */);
 }
 
+#if 0
 int atcac_sw_ecdsa_verify_p256(const uint8_t msg[ATCA_ECC_P256_FIELD_SIZE],
                                const uint8_t signature[ATCA_ECC_P256_SIGNATURE_SIZE],
                                const uint8_t public_key[ATCA_ECC_P256_PUBLIC_KEY_SIZE])
@@ -94,7 +98,6 @@ int atcac_sw_random(uint8_t* data, size_t data_size)
 {
 
 }
-
 #endif
 
 /** \brief Initializes an mbedtls pk context for use with EC operations
@@ -154,6 +157,7 @@ int atca_mbedtls_pk_init(mbedtls_pk_context * pkey, const uint16_t slotid)
     return ret;
 }
 
+#if 0
 /** \brief Rebuild a certificate from an atcacert_def_t structure, and then add
  * it to an mbedtls cert chain.
  * \param[in,out] cert mbedtls cert chain. Must have already been initialized
@@ -203,4 +207,4 @@ int atca_mbedtls_cert_add(mbedtls_x509_crt * cert, const atcacert_def_t * cert_d
 
     return ret;
 }
-
+#endif
