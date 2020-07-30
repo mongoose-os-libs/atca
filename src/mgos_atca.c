@@ -49,7 +49,12 @@ bool mgos_atca_init(void) {
       serial[(ATCA_SERIAL_NUM_SIZE + sizeof(uint32_t) - 1) / sizeof(uint32_t)];
   bool config_is_locked, data_is_locked;
   ATCA_STATUS status;
-  ATCAIfaceCfg *atca_cfg;
+  static ATCAIfaceCfg atca_cfg = {
+      .iface_type = ATCA_I2C_IFACE,
+      .devtype = ATECC608A,
+      .wake_delay = 1500,
+      .rx_retries = 20,
+  };
 
   if (!mgos_sys_config_get_sys_atca_enable()) {
     return true;
@@ -67,15 +72,10 @@ bool mgos_atca_init(void) {
    * addresses > 0x7f are invalid.
    */
   if (addr < 0x7f) addr <<= 1;
-  atca_cfg = &cfg_ateccx08a_i2c_default;
-  if (atca_cfg->atcai2c.slave_address != addr) {
-    ATCAIfaceCfg *cfg = (ATCAIfaceCfg *) calloc(1, sizeof(*cfg));
-    memcpy(cfg, &cfg_ateccx08a_i2c_default, sizeof(*cfg));
-    cfg->atcai2c.slave_address = addr;
-    atca_cfg = cfg;
-  }
+  atca_cfg.atcai2c.slave_address = addr;
 
-  status = atcab_init(atca_cfg);
+  atca_cfg.devtype = ATECC608A;
+  status = atcab_init(&atca_cfg);
   if (status != ATCA_SUCCESS) {
     LOG(LL_ERROR, ("ATCA: Library init failed"));
     goto out;
@@ -85,8 +85,20 @@ bool mgos_atca_init(void) {
   if (status != ATCA_SUCCESS) {
     LOG(LL_ERROR, ("ATCA: Failed to get chip info (%d/0x%x)",
                    mgos_sys_config_get_sys_atca_i2c_bus(),
-                   (atca_cfg->atcai2c.slave_address >> 1)));
+                   (atca_cfg.atcai2c.slave_address >> 1)));
     goto out;
+  }
+
+  s_is_608 = (htonl(revision) >= 0x6000);
+
+  if (!s_is_608) {
+    atcab_release();
+    atca_cfg.devtype = ATECC508A;
+    status = atcab_init(&atca_cfg);
+    if (status != ATCA_SUCCESS) {
+      LOG(LL_ERROR, ("ATCA: Failed to initialize ATECC508A"));
+      goto out;
+    }
   }
 
   status = atcab_read_serial_number((uint8_t *) serial);
@@ -101,8 +113,6 @@ bool mgos_atca_init(void) {
     LOG(LL_ERROR, ("ATCA: Failed to get chip zone lock status"));
     goto out;
   }
-
-  s_is_608 = (htonl(revision) >= 0x6000);
 
   LOG(LL_INFO,
       ("%s @ %d/0x%02x: rev 0x%04x S/N 0x%04x%04x%02x, zone "
